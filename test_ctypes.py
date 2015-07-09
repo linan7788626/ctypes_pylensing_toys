@@ -3,6 +3,7 @@
 import pygame
 from pygame.locals import *
 from sys import exit
+#from v2_cv import *
 from v2_cv import *
 
 def main():

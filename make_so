@@ -1,2 +1,2 @@
-gcc -Wall -fPIC -c ./cv_test.c
-gcc -shared ./cv_test.o -o ./libcv_test.so
+gcc -Wall -fPIC -c ./all_cv_test.c
+gcc -shared ./all_cv_test.o -o ./liball_cv_test.so

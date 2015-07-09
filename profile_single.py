@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
-from v2_cv import *
+#from libv2_cv import *
+from v3_cv import *
 
 #@profile
 def main():
@@ -91,17 +92,13 @@ def main():
     g_pa = gr_pa          # major-axis position angle (degrees) c.c.w. from y axis
     spar = np.asarray([g_ycen,g_xcen,g_axrat,g_amp,g_sig,g_pa])
     #----------------------------------------------
-
-    g_lenses = lens_images(xi1,xi2,gpar,gpars)
-    g_shapes = mmbr_images(xi1,xi2,gpar,gpars)
+    g_lenses = call_lens_images(xi1,xi2,gpar,gpars)
+    g_shapes = call_mmbr_images(xi1,xi2,gpar,gpars)
+    s_image,g_lensimage,criticals,caustics = call_all_about_lensing(xi1,xi2,spar,lpar,lpars)
 
     baset[:,:,0] = g_shapes*255
     baset[:,:,1] = g_shapes*255
     baset[:,:,2] = g_shapes*255
-
-    s_image,g_lensimage,mu,yi1,yi2 = lensed_images(xi1,xi2,spar,lpar,lpars)
-    mu = 1.0/mu
-
 
     base0[:,:,0] = g_lenses*255
     base0[:,:,1] = g_lenses*127
@@ -115,18 +112,13 @@ def main():
     base2[:,:,1] = g_lensimage*178
     base2[:,:,2] = g_lensimage*255
 
-    critical = call_find_critical_curve(mu)
-    base3[:,:,0] = critical*255
-    base3[:,:,1] = critical*0
-    base3[:,:,2] = critical*0
+    base3[:,:,0] = criticals*255
+    base3[:,:,1] = criticals*0
+    base3[:,:,2] = criticals*0
 
-    yif1,yif2 = refine_critical(lpar,lpars,critical,xi1,xi2,dsx)
-    caustic = call_forward_cic(nnn,nnn,boxsize,yif1.flatten(),yif2.flatten())
-    caustic[caustic>0]=1
-
-    base4[:,:,0] = caustic*0
-    base4[:,:,1] = caustic*255
-    base4[:,:,2] = caustic*0
+    base4[:,:,0] = caustics*0
+    base4[:,:,1] = caustics*255
+    base4[:,:,2] = caustics*0
 
     wf = base1+base2+base3+base4
     print np.max(wf)
